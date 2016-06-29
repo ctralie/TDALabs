@@ -86,14 +86,16 @@ def getPDs(I, J, D, N, m):
     subprocess.call(["./phatclique", "-i", "temp.dimacs", "-m", "%i"%m, "-o", "temp.results"])
     return parsePDs("temp.results")
 
+def doRipsFiltration(X, maxHomDim, eps = 0):
+    (I, J, D) = makeComplex(X, 0)
+    PDs = getPDs(I, J, D, X.shape[0], maxHomDim+2)
+    return PDs
     
 if __name__ == '__main__':
     X = np.random.randn(100, 2)
     X = X/np.sqrt(np.sum(X**2, 1)[:, None])
     #plt.plot(X[:, 0], X[:, 1], '.')
     #plt.show()
-    (I, J, D) = makeComplex(X, 0)
-    PDs = getPDs(I, J, D, X.shape[0], 3)
-    print(PDs)
+    PDs = doRipsFiltration(X)
     plotDGM(PDs[1])
     plt.show()
