@@ -76,7 +76,7 @@ def loadVideo(path, YCbCr = True):
         if isFile:
             #Clean up temporary files
             os.remove(filename)
-    print("Finished loading %s"%path)
+    print("\nFinished loading %s"%path)
     return (I, IDims)
 
 #Output video

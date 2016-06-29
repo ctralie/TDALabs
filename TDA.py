@@ -27,6 +27,18 @@ def plotDGM(dgm, color = 'b', sz = 20, label = 'dgm'):
     plt.xlabel('Time of Birth')
     plt.ylabel('Time of Death')
 
+def plotDGMAx(ax, dgm, color = 'b', sz = 20, label = 'dgm'):
+    if dgm.size == 0:
+        return
+    axMin = np.min(dgm)
+    axMax = np.max(dgm)
+    axRange = axMax-axMin;
+    ax.scatter(dgm[:, 0], dgm[:, 1], sz, color,label=label)
+    ax.hold(True)
+    ax.plot([axMin-axRange/5,axMax+axRange/5], [axMin-axRange/5, axMax+axRange/5],'k');
+    ax.set_xlabel('Time of Birth')
+    ax.set_ylabel('Time of Death')
+
 def plot2DGMs(P1, P2, l1 = 'Diagram 1', l2 = 'Diagram 2'):
     plotDGM(P1, 'r', 10, label = l1)
     plt.hold(True)
