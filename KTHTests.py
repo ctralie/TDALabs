@@ -55,7 +55,6 @@ if __name__ == '__main__':
                 filename = "KTH/%s/person%.2i_%s_d%i_uncomp.avi"%(a, person, a, t)
                 filenames.append(filename)
     
-    results = []
     scores = []
     for i in range(len(filenames)):
         print("\n\n\n\n\n\n\n\n\n\ni = ", i)
@@ -123,7 +122,23 @@ if __name__ == '__main__':
         
         #Video clip
         clip = XOrig[idxs[maxj], :]
-        results.append({"D":D, "Y":Y, "PD":maxPD, "maxP":maxP, "clip":(clip, FrameDims)})
+        saveVideo(clip, FrameDims, "VideoResults/%i.ogg"%i)
+        
+        plt.clf()
+        plt.imshow(D)
+        plt.savefig("VideoResults/D%i.png"%i, bbox_inches='tight')
+        
+        plt.clf()
+        plotDGM(maxPD)
+        plt.savefig("VideoResults/PD%i.svg"%i, bbox_inches='tight')
+        
+        plt.clf()
+        ax = plt.subplot(111)
+        ax.set_title("PCA of Sliding Window Embedding")
+        ax.scatter(Y[:, 0], Y[:, 1])
+        ax.set_aspect('equal', 'datalim')
+        plt.savefig("VideoResults/Y%i.svg"%i, bbox_inches='tight')
+        
         scores.append(maxP)
     
     scores = np.array(scores)
@@ -132,32 +147,14 @@ if __name__ == '__main__':
     fout = open("VideoResults/index.html", "w")
     fout.write("<html><body><table border = '1'>")
     idx = np.argsort(-scores)
-    for i in range(len(idx)):
-        res = results[idx[i]]
-        fout.write("<tr><td><h2>%i</h2>%s<BR><BR>Maximum Persistence = <BR><b>%g</b></td>"%(i+1, filenames[idx[i]], res["maxP"]))
-        saveVideo(res["clip"][0], res["clip"][1], "VideoResults/%i.ogg"%i)
+    count = 1
+    for i in idx:
+        fout.write("<tr><td><h2>%i</h2>%s<BR><BR>Maximum Persistence = <BR><b>%g</b></td>"%(count, filenames[i], scores[i]))
         fout.write("<td><video controls><source src=\"%i.ogg\" type=\"video/ogg\">Your browser does not support the video tag.</video><BR>Clip Length %i</td>"%(i, res["clip"][0].shape[0]))
-        
-        plt.clf()
-        plt.imshow(res["D"])
-        plt.savefig("VideoResults/D%i.png"%i, bbox_inches='tight')
-        
-        plt.clf()
-        plotDGM(res["PD"])
-        plt.savefig("VideoResults/PD%i.svg"%i, bbox_inches='tight')
-        
-        plt.clf()
-        Y = res["Y"]
-        ax = plt.subplot(111)
-        ax.set_title("PCA of Sliding Window Embedding")
-        ax.scatter(Y[:, 0], Y[:, 1])
-        ax.set_aspect('equal', 'datalim')
-        plt.savefig("VideoResults/Y%i.svg"%i, bbox_inches='tight')
-        
         fout.write("<td><img src = \"PD%i.svg\"></td>"%i)
         fout.write("<td><img src = \"D%i.png\"></td>"%i)
         fout.write("<td><img src = \"Y%i.svg\"></td>"%i)
-        
         fout.write("</tr>\n")
+        count += 1
     fout.write("</table></body></html>")
     fout.close()
