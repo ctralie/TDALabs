@@ -1,12 +1,12 @@
+#Programmer: Chris Tralie
+#Purpose: Some tools that load/save videos in Python by wrapping around
+#avconv
 import numpy as np
 import numpy.linalg as linalg
-import scipy.io as sio
 import time
 import os
 import subprocess
 import matplotlib.image as mpimage
-import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
 
 #Need these for saving 3D video
 
@@ -29,7 +29,7 @@ def ntsc2rgb(F):
 
 #Input: path: Either a filename or a folder
 #Returns: tuple (Video NxP array, dimensions of video)
-def loadVideo(path, YCbCr = True):
+def loadVideo(path, YCbCr = False):
     if not os.path.exists(path):
         print("ERROR: Video path not found: %s"%path)
         return None
@@ -81,11 +81,11 @@ def loadVideo(path, YCbCr = True):
 
 #Output video
 #I: PxN video array, IDims: Dimensions of each frame
-def saveVideo(I, IDims, filename, FrameRate = 30, YCbCr = True, Normalize = False):
+def saveVideo(I, IDims, filename, FrameRate = 30, YCbCr = False, Normalize = False):
     #Overwrite by default
     if os.path.exists(filename):
         os.remove(filename)
-    N = I.shape[1]
+    N = I.shape[0]
     if YCbCr:
         for i in range(N):
             frame = np.reshape(I[i, :], IDims)
@@ -112,10 +112,6 @@ def saveVideo(I, IDims, filename, FrameRate = 30, YCbCr = True, Normalize = Fals
     for i in range(N):
         os.remove("%s%i.png"%(TEMP_STR, i+1))
 
-def getPCAVideo(I):
-    pca = PCA(n_components = I.shape[0]-1)
-    IRet = pca.fit_transform(I)
-    return IRet
 
 #############################################################
 ####            FAST TIME DELAY EMBEDDING               #####
@@ -189,16 +185,37 @@ def tde_rightsvd(I, W, Mu):
     end_time = time.time()
     return (Y, S)
 
-if __name__ == '__main__':
-    (I, IDims) = loadVideo("crane_crop.avi")
-    print("I.shape = ", I.shape)
-    print("IDims = ", IDims)
-    IPCA = getPCAVideo(I)
-    print("Getting sliding window...")
-    sliding = getSlidingWindowVideo(IPCA, 30, 1)
-    print("Finished getting sliding window")
-    print("sliding.shape = ", sliding.shape)
-    pca = PCA(n_components = 2)
-    Y = pca.fit_transform(sliding)
-    plt.plot(Y[:, 0], Y[:, 1], '.')
-    plt.show()
+#############################################################
+####               SYNTHETIC 2D VIDEOS                  #####
+#############################################################
+def makeDriftingOscillatingSquare(NFrames = 200, NPeriods = 8, driftmag = 0, noiseLevel = 0, sigLevel = 0.4, bgLevel = 0.4, res = 20):
+    u = np.linspace(-1, 1, res)
+    umask = 0.5
+
+    [X, Y] = np.meshgrid(u, u)
+    theta = 2*np.pi/7
+    omega = 2*np.pi/(1.5)
+    wx = omega*np.cos(theta)
+    wy = omega*np.sin(theta)
+
+    ts = np.linspace(0, NPeriods*2*np.pi, NFrames+1)
+    ts = ts[0:-1] #Make sure the sampling is incommensurate with the period
+
+    #Slow drift
+    drift = np.linspace(0, driftmag, NFrames)
+    drift = np.reshape(drift, [drift.size, 1])
+    drift = np.concatenate((drift, drift), 1)
+    I = np.zeros((X.size*3, NFrames))
+    IDims = I.shape
+    
+    for i in range(NFrames):
+        mask = (np.abs(X-drift[i, 0]) < umask)*(abs(Y-drift[i,1]) < umask)
+        v = ((wx*(X-drift[i, 0]) + wy*(Y-drift[i, 1]) - ts[i]) % (2*np.pi)) < np.pi
+        v = bgLevel + sigLevel*v + noiseLevel*np.random.randn(v.shape[0], v.shape[1])
+        #v[v > 1] = 1
+        v = v*mask
+        v = np.reshape(v, [v.shape[0], v.shape[1], 1])
+        v = np.concatenate((v, v, v), 2)
+        IDims = v.shape
+        I[:, i] = v.flatten()
+    return (I, IDims, ts)
