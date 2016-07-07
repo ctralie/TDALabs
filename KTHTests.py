@@ -53,7 +53,8 @@ if __name__ == '__main__':
         for person in range(1, 26):
             for t in range(1, 5):
                 filename = "KTH/%s/person%.2i_%s_d%i_uncomp.avi"%(a, person, a, t)
-                filenames.append(filename)
+                if os.path.exists(filename):
+                    filenames.append(filename)
     
     scores = []
     for i in range(len(filenames)):
@@ -73,8 +74,8 @@ if __name__ == '__main__':
         N = X.shape[0]
         NBlocks = int(np.ceil(1 + (N - BlockLen)/BlockHop))
         print("NBlocks = ", NBlocks)
-        for i in range(NBlocks):
-            thisidxs = np.arange(i*BlockHop, i*BlockHop+BlockLen, dtype=np.int64)
+        for k in range(NBlocks):
+            thisidxs = np.arange(k*BlockHop, k*BlockHop+BlockLen, dtype=np.int64)
             thisidxs = thisidxs[thisidxs < N]
             idxs.append(thisidxs)
         
