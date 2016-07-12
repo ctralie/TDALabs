@@ -95,7 +95,15 @@ def getPDs(I, J, D, N, m):
     writeResults(I, J, D, N, "temp.dimacs")
     if os.path.exists("temp.results"):
         os.remove("temp.results")
-    subprocess.call(["./phatclique", "-i", "temp.dimacs", "-m", "%i"%m, "-o", "temp.results"])
+    proc = subprocess.Popen(["./phatclique", "-i", "temp.dimacs", "-m", "%i"%m, "-o", "temp.results"], stdout=subprocess.PIPE)
+    #stdout = proc.communicate()[0]
+    while True:
+        output=proc.stdout.readline()
+        if (output == b'' or output == '') and proc.poll() is not None:
+            break
+        if output:
+            print(output.strip())
+        rc = proc.poll()
     return parsePDs("temp.results")
 
 def doRipsFiltration(X, maxHomDim, eps = 0):
@@ -104,10 +112,10 @@ def doRipsFiltration(X, maxHomDim, eps = 0):
     return PDs
     
 if __name__ == '__main__':
-    X = np.random.randn(100, 2)
+    X = np.random.randn(200, 2)
     X = X/np.sqrt(np.sum(X**2, 1)[:, None])
     #plt.plot(X[:, 0], X[:, 1], '.')
     #plt.show()
-    PDs = doRipsFiltration(X)
+    PDs = doRipsFiltration(X, 1)
     plotDGM(PDs[1])
     plt.show()
