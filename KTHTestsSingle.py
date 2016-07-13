@@ -51,6 +51,10 @@ if __name__ == '__main__':
     X = getPCAVideo(X)
     print("Finished PCA")
     [X, validIdx] = getTimeDerivative(X, 10)
+    X = getPCAVideo(X)
+    plt.imshow(X, interpolation = 'none', aspect = 'auto')
+    plt.show()
+    X = X[:, -10::]
     
     XSqr = np.sum(X**2, 1).flatten()
     D = XSqr[:, None] + XSqr[None, :] - 2*X.dot(X.T)

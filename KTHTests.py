@@ -11,6 +11,7 @@ from sklearn.decomposition import PCA
 def getPCAVideo(I):
     ICov = I.dot(I.T)
     [lam, V] = linalg.eigh(ICov)
+    lam[lam < 0] = 0
     V = V*np.sqrt(lam[None, :])
     return V
 
@@ -50,8 +51,8 @@ if __name__ == '__main__':
     
     filenames = []
     for a in ACTIVITIES:
-        for person in range(1, 26):
-            for t in range(1, 5):
+        for person in range(1, 26): #Subject
+            for t in range(1, 5): #Activity type
                 filename = "KTH/%s/person%.2i_%s_d%i_uncomp.avi"%(a, person, a, t)
                 if os.path.exists(filename):
                     filenames.append(filename)
@@ -151,7 +152,7 @@ if __name__ == '__main__':
     count = 1
     for i in idx:
         fout.write("<tr><td><h2>%i</h2>%s<BR><BR>Maximum Persistence = <BR><b>%g</b></td>"%(count, filenames[i], scores[i]))
-        fout.write("<td><video controls><source src=\"%i.ogg\" type=\"video/ogg\">Your browser does not support the video tag.</video><BR>Clip Length %i</td>"%(i, res["clip"][0].shape[0]))
+        fout.write("<td><video controls><source src=\"%i.ogg\" type=\"video/ogg\">Your browser does not support the video tag.</video>"%i)
         fout.write("<td><img src = \"PD%i.svg\"></td>"%i)
         fout.write("<td><img src = \"D%i.png\"></td>"%i)
         fout.write("<td><img src = \"Y%i.svg\"></td>"%i)
