@@ -80,7 +80,6 @@ if __name__ == '__main__':
             thisidxs = thisidxs[thisidxs < N]
             idxs.append(thisidxs)
         
-        wins = np.arange(2, 50)
         res = np.zeros(NBlocks)
         
         #Get sliding window video in blocks
