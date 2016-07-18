@@ -24,6 +24,9 @@ This will launch a browser on your computer that will allow you to run the modul
 ##Installing librosa
 After you have the proper Python environment, you will need to install the [librosa library](https://github.com/librosa/librosa) for the third module on audio processing.
 
+##Installing avconv
+For loading video, you will need to install the [avconv](https://libav.org/download/) binaries
+
 ##Compiling the TDA Tools Library
 To run code which computes TDA (modules 2-4), you will need to compile some C++ code, written by [Rann Bar-On](https://math.duke.edu/people/rann-bar).  This requires you to have CMake and OpenMP installed.  Change into the directory "h2phatclique" and issue the following commands
 
