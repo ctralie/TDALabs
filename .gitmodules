@@ -1,0 +1,3 @@
+[submodule "ripser"]
+	path = ripser
+	url = https://github.com/Ripser/ripser.git
