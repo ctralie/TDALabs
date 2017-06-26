@@ -1,7 +1,9 @@
 # TUMTopoTimeSeries2016
 
-For the summer workshop "Mathematical Methods for High-Dimensional Data Analysis"
-http://www-m15.ma.tum.de/Allgemeines/SummerSchool2016
+This series of Jupyter Notebooks serves as a walkthrough of topological time series analysis.  Applications include rhythm analysis in music and periodicity / quasiperiodicity quantification in video.
+
+This started off as a tutorial for the summer workshop "[Mathematical Methods for High-Dimensional Data Analysis](http://www-m15.ma.tum.de/Allgemeines/SummerSchool2016)."  Now it is used more generally to support pedagogical activities to support the NSF big data grant DKA-1447491, as well as assisting with the [ICERM Summer Undergraduate Program](https://icerm.brown.edu/summerug/2017/).
+
 
 # Installation Instructions
 
@@ -49,3 +51,13 @@ python TDA.py
 ~~~~~
 
 at the root of this repository.  This should compute a persistence diagram of a circle, which has only one persistence point.
+
+## Running the code
+
+At the root of this directory, type
+
+~~~~~ bash
+jupyter notebook
+~~~~~
+
+This will launch a browser window, where you can run the modules.  Click on one of the files (e.g. 1-SlidingWindowBasics.ipynb) to begin
