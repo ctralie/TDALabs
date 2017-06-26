@@ -3,11 +3,17 @@
 For the summer workshop "Mathematical Methods for High-Dimensional Data Analysis"
 http://www-m15.ma.tum.de/Allgemeines/SummerSchool2016
 
-#Installation Instructions
+# Installation Instructions
 
 Below are instructions for installing and running these tutorials
 
-##Installing Jupyter Notebook
+## Checking out code
+
+~~~~~ bash
+git clone --recursive https://github.com/ctralie/TUMTopoTimeSeries2016.git
+~~~~~
+
+## Installing Jupyter Notebook
 
 To run these modules, you will need to have jupyter notebook installed with a *Python 3* backend with numpy, scipy, and matplotlib.  The easiest way to install this is with Anaconda:
 
@@ -21,21 +27,19 @@ jupyter notebook
 
 This will launch a browser on your computer that will allow you to run the modules via the local Jupyter backend server
 
-##Installing librosa
+## Installing librosa
 After you have the proper Python environment, you will need to install the [librosa library](https://github.com/librosa/librosa) for the third module on audio processing.
 
-##Installing avconv
+## Installing avconv
 For loading video, you will need to install the [avconv](https://libav.org/download/) binaries
 
-##Compiling the TDA Tools Library
-To run code which computes TDA (modules 2-4), you will need to compile some C++ code, written by [Rann Bar-On](https://math.duke.edu/people/rann-bar).  This requires you to have CMake and OpenMP installed.  Change into the directory "h2phatclique" and issue the following commands
+## Compiling Ripser
+To run code which computes TDA (modules 2-4), you will need to compile some C++ code, written by [Uli Bauer](http://ulrich-bauer.org/).  From the root directory of the repository, run the following commands
 
 ~~~~~ bash
-mkdir build
-cd build
-cmake ..
-make
-cp ../bin/phatclique ../..
+cd ripser
+maker ripser ripser-coeff
+cd ..
 ~~~~~
 
 
