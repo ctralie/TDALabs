@@ -33,7 +33,11 @@ This will launch a browser on your computer that will allow you to run the modul
 After you have the proper Python environment, you will need to install the [librosa library](https://github.com/librosa/librosa) for the third module on audio processing.
 
 ## Installing avconv
-For loading video, you will need to install the [avconv](https://libav.org/download/) binaries
+For loading video, you will need to install the [avconv](https://libav.org/download/) binaries, and you will need the Python [imageio library](http://imageio.github.io/)
+
+~~~~~ bash
+pip install imageio
+~~~~~
 
 ## Compiling Ripser
 To run code which computes TDA (modules 2-4), you will need to compile some C++ code, written by [Uli Bauer](http://ulrich-bauer.org/).  From the root directory of the repository, run the following commands
