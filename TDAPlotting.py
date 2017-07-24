@@ -17,7 +17,7 @@ def plotDGM(dgm, color = 'b', sz = 20, label = 'dgm', axcolor = np.array([0.0, 0
     b = axMax+axRange/5
     # plot line
     plt.plot([a, b], [a, b], c = axcolor, label = 'none')
-    plt.hold(True)
+    #plt.hold(True)
     # plot points
     if marker:
         H = plt.scatter(dgm[:, 0], dgm[:, 1], sz, color, marker, label=label, edgecolor = 'none')
@@ -35,14 +35,14 @@ def plotDGMAx(ax, dgm, color = 'b', sz = 20, label = 'dgm'):
     axMax = np.max(dgm)
     axRange = axMax-axMin;
     ax.scatter(dgm[:, 0], dgm[:, 1], sz, color,label=label)
-    ax.hold(True)
+    #ax.hold(True)
     ax.plot([axMin-axRange/5,axMax+axRange/5], [axMin-axRange/5, axMax+axRange/5],'k');
     ax.set_xlabel('Time of Birth')
     ax.set_ylabel('Time of Death')
 
 def plot2DGMs(P1, P2, l1 = 'Diagram 1', l2 = 'Diagram 2'):
     plotDGM(P1, 'r', 10, label = l1)
-    plt.hold(True)
+    #plt.hold(True)
     plt.plot(P2[:, 0], P2[:, 1], 'bx', label = l2)
     plt.legend()
     plt.xlabel("Birth Time")
@@ -50,14 +50,14 @@ def plot2DGMs(P1, P2, l1 = 'Diagram 1', l2 = 'Diagram 2'):
 
 
 def plotTriangles(X, A, B, C):
-    plt.hold(True)
+    #plt.hold(True)
     ax = plt.gca()
     for i in range(len(A)):
         poly = [X[A[i], :], X[B[i], :], X[C[i], :]]
         ax.add_patch(Polygon(np.array(poly), linestyle='solid', color='#00FF00', alpha=0.05))
 
 def drawLineColored(X, C):
-    plt.hold(True)
+    #plt.hold(True)
     for i in range(X.shape[0]-1):
         plt.plot(X[i:i+2, 0], X[i:i+2, 1], c=C[i, :], lineWidth = 3)
 
@@ -67,7 +67,7 @@ def plotCocycle(X, cocycle, thresh, drawTriangles = False):
     D[D < 0] = 0 #Numerical precision
     D = np.sqrt(D)
 
-    plt.hold(True)
+    #plt.hold(True)
     ax = plt.gca()
     #Plot all edges under the threshold
     N = X.shape[0]
