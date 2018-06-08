@@ -12,7 +12,7 @@ Below are instructions for installing and running these tutorials
 ## Checking out code
 
 ~~~~~ bash
-git clone --recursive https://github.com/ctralie/TUMTopoTimeSeries2016.git
+git clone --recursive https://github.com/rannbaron/TUMTopoTimeSeries2016.git
 ~~~~~
 
 ## Installing Jupyter Notebook
@@ -44,7 +44,7 @@ To run code which computes TDA (modules 2-4), you will need to compile some C++ 
 
 ~~~~~ bash
 cd ripser
-maker ripser ripser-coeff
+make all
 cd ..
 ~~~~~
 

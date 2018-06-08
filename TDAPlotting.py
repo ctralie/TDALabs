@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 
-def plotDGM(dgm, color = 'b', sz = 20, label = 'dgm', axcolor = np.array([0.0, 0.0, 0.0]), marker = None):
+def plotDGM(dgm, color = 'b', hltcolor = 'r', sz = 20, label = 'dgm', axcolor = np.array([0.0, 0.0, 0.0]), marker = None, highlight = 0):
     if dgm.size == 0:
         return
     # Create Lists
@@ -19,10 +19,21 @@ def plotDGM(dgm, color = 'b', sz = 20, label = 'dgm', axcolor = np.array([0.0, 0
     plt.plot([a, b], [a, b], c = axcolor, label = 'none')
     #plt.hold(True)
     # plot points
+    
+    colors = np.array([color for i in range(dgm.shape[0])])
+    
+    # Highlight the top few points (given by the highlight parameter)
+    if highlight > 0:
+        # get indices of top highlight points
+        maxind = np.argpartition(dgm[:,1]-dgm[:,0], -highlight)[-highlight:]
+        colors[maxind] = hltcolor
+    
     if marker:
-        H = plt.scatter(dgm[:, 0], dgm[:, 1], sz, color, marker, label=label, edgecolor = 'none')
+        H = plt.scatter(dgm[:, 0], dgm[:, 1], sz, colors, marker, label=label, edgecolor = 'none')
     else:
-        H = plt.scatter(dgm[:, 0], dgm[:, 1], sz, color, label=label, edgecolor = 'none')
+        H = plt.scatter(dgm[:, 0], dgm[:, 1], sz, colors, label=label, edgecolor = 'none')
+       
+       
     # add labels
     plt.xlabel('Time of Birth')
     plt.ylabel('Time of Death')
