@@ -11,38 +11,14 @@ import scipy.misc #Used for downsampling rasterized images avoiding aliasing
 import time #For timing kernel comparison
 import sklearn.metrics.pairwise
 import scipy.stats
+from ripser import ripser, plot_dgms
 
 ##############################################################################
 ##########                  Plotting Functions                      ##########
 ##############################################################################
 
-def plotDGM(dgm, color = 'b', sz = 20, label = 'dgm', axcolor = np.array([0.0, 0.0, 0.0]), marker = None):
-    if dgm.size == 0:
-        return
-    # Create Lists
-    # set axis values
-    axMin = np.min(dgm)
-    axMax = np.max(dgm)
-    axRange = axMax-axMin
-    a = max(axMin - axRange/5, 0)
-    b = axMax+axRange/5
-    # plot line
-    plt.plot([a, b], [a, b], c = axcolor, label = 'none')
-    plt.hold(True)
-    # plot points
-    if marker:
-        H = plt.scatter(dgm[:, 0], dgm[:, 1], sz, color, marker, label=label, edgecolor = 'none')
-    else:
-        H = plt.scatter(dgm[:, 0], dgm[:, 1], sz, color, label=label, edgecolor = 'none')
-    # add labels
-    plt.xlabel('Time of Birth')
-    plt.ylabel('Time of Death')
-    return H
-
-def plotWassersteinMatching(I1, I2, matchidx, color1 = 'r', color2 = 'b', marker1 = 'o', marker2 = 'x'):
-    plotDGM(I1, color = color1, marker = marker1, sz=50)
-    plt.hold(True)
-    plotDGM(I2, color = color2, marker = marker2)
+def plotPDMatching(I1, I2, matchidx):
+    plot_dgms([I1, I2], labels = ['dgm1', 'dgm2'])
     cp = np.cos(np.pi/4)
     sp = np.sin(np.pi/4)
     R = np.array([[cp, -sp], [sp, cp]])
@@ -112,7 +88,7 @@ def getWassersteinDist(S, T):
     :param T: Nx(>=2) array of birth/death paris for PD 2
     :returns (tuples of matched indices, total cost, (N+M)x(N+M) cross-similarity)
     """
-    import hungarian.hungarian as hungarian #Requires having compiled the library
+    import hungarian #Requires having compiled the library
     D = getCSMPDMatching(S, T)
     D = D.tolist()
 
@@ -145,12 +121,14 @@ def getBottleneckDist(S, T):
     ds = np.sort(ds)
     bdist = ds[-1]
     matching = {}
-    while len(ds) > 1:
-        idx = bisect_left(range(ds.size), int(ds.size/2))
+    while len(ds) >= 1:
+        idx = 0
+        if len(ds) > 1:
+            idx = bisect_left(range(ds.size), int(ds.size/2))
         d = ds[idx]
         graph = {}
         for i in range(N):
-            graph['%s'%i] = {j for j in range(N) if B[i, j] <= d}
+            graph['%s'%i] = {j for j in range(N) if D[i, j] <= d}
         res = HopcroftKarp(graph).maximum_matching()
         if len(res) == 2*N and d < bdist:
             bdist = d
@@ -286,12 +264,22 @@ if __name__ == '__main__':
     X = np.zeros((N, 2))
     X[:, 0] = np.cos(t)
     X[:, 1] = np.sin(t)
-    X = X + 0.1*np.random.randn(N, 2)
-    I = ripser(X)['dgms'][1]
-    res = getPersistenceImage(I, [0, 1.5, 0, 1.5], 0.1)
-    I[:, 1] -= I[:, 0]
-    plt.imshow(res['PI'], extent = (res['xr'][0], res['xr'][-1], res['yr'][-1], res['yr'][0]), cmap = 'afmhot', interpolation = 'nearest')
-    plt.scatter(I[:, 0], I[:, 1])
-    plt.xlim([0, 0.5])
-    plt.ylim([0, 1.5])
+    I1 = ripser(X)['dgms'][1]
+    X2 = X + 0.2*np.random.randn(N, 2)
+    I2 = ripser(X2)['dgms'][1]
+    tic = time.time()
+    (matchidxb, bdist, D) = getBottleneckDist(I1, I2)
+    btime = time.time() - tic 
+    tic = time.time()
+    (matchidxw, wdist, D) = getWassersteinDist(I1, I2)
+    wtime = time.time() - tic
+    print("Elapsed Time Bottleneck: %.3g\nElapsed Time Wasserstein: %.3g"%(btime, wtime))
+    
+    plt.figure(figsize=(12, 6))
+    plt.subplot(121)
+    plotPDMatching(I1, I2, matchidxb)
+    plt.title("Bottleneck Dist: %.3g"%bdist)
+    plt.subplot(122)
+    plotPDMatching(I1, I2, matchidxw)
+    plt.title("Wasserstein Dist: %.3g"%wdist)
     plt.show()
