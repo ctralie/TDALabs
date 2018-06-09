@@ -48,7 +48,19 @@ def plotPDMatching(I1, I2, matchidx):
 ##########            Diagram Comparison Functions                  ##########
 ##############################################################################
 
-def getCSMPDMatching(S, T):
+def getWassersteinDist(S, T):
+    """
+    Perform the Wasserstein distance matching between persistence diagrams.
+    Assumes first two columns of S and T are the coordinates of the persistence
+    points, but allows for other coordinate columns (which are ignored in
+    diagonal matching)
+    :param S: Mx(>=2) array of birth/death pairs for PD 1
+    :param T: Nx(>=2) array of birth/death paris for PD 2
+    :returns (tuples of matched indices, total cost, (N+M)x(N+M) cross-similarity)
+    """
+    import hungarian #Requires having compiled the library
+
+    # Step 1: Compute CSM between S and T, including points on diagonal
     N = S.shape[0]
     M = T.shape[0]
     #Handle the cases where there are no points in the diagrams
@@ -76,23 +88,9 @@ def getCSMPDMatching(S, T):
     UL = np.max(D)*np.ones((M, M))
     np.fill_diagonal(UL, T[:, 1])
     D[N:M+N, 0:M] = UL
-    return D
-
-def getWassersteinDist(S, T):
-    """
-    Perform the Wasserstein distance matching between persistence diagrams.
-    Assumes first two columns of S and T are the coordinates of the persistence
-    points, but allows for other coordinate columns (which are ignored in
-    diagonal matching)
-    :param S: Mx(>=2) array of birth/death pairs for PD 1
-    :param T: Nx(>=2) array of birth/death paris for PD 2
-    :returns (tuples of matched indices, total cost, (N+M)x(N+M) cross-similarity)
-    """
-    import hungarian #Requires having compiled the library
-    D = getCSMPDMatching(S, T)
     D = D.tolist()
 
-    #Run the hungarian algorithm
+    # Step 2: Run the hungarian algorithm
     matchidx = hungarian.lap(D)[0]
     matchidx = [(i, matchidx[i]) for i in range(len(matchidx))]
     matchdist = 0
@@ -114,7 +112,29 @@ def getBottleneckDist(S, T):
     """
     from bisect import bisect_left
     from hopcroftkarp import HopcroftKarp
-    D = getCSMPDMatching(S, T)
+
+    N = S.shape[0]
+    M = T.shape[0]
+    # Step 1: Compute CSM between S and T, including points on diagonal
+    # L Infinity distance
+    Sb, Sd = S[:, 0], S[:, 1]
+    Tb, Td = T[:, 0], T[:, 1]
+    D1 = np.abs(Sb[:, None] - Tb[None, :])
+    D2 = np.abs(Sd[:, None] - Td[None, :])
+    DUL = np.maximum(D1, D2)
+    # Put diagonal elements into the matrix, being mindful that Linfinity
+    # balls meet the diagonal line at a diamond vertex
+    D = np.zeros((N+M, N+M))
+    D[0:N, 0:M] = DUL
+    UR = np.max(D)*np.ones((N, N))
+    np.fill_diagonal(UR, 0.5*(S[:, 1]-S[:, 0]))
+    D[0:N, M::] = UR
+    UL = np.max(D)*np.ones((M, M))
+    np.fill_diagonal(UL, 0.5*(T[:, 1]-T[:, 0]))
+    D[N::, 0:M] = UL
+
+    # Step 2: Perform a binary search + Hopcroft Karp to find the
+    # bottleneck distance
     N = D.shape[0]
     ds = np.unique(D.flatten())
     ds = ds[ds > 0]
@@ -256,8 +276,7 @@ def getPersistenceImage(dgm, plims, res, weightfn = lambda b, l: l, psigma = Non
         PI += weightfn(x, y)*(X[1::, 1::] - X[0:-1, 1::] - X[1::, 0:-1] + X[0:-1, 0:-1])
     return {'PI':PI, 'xr':xr[0:-1], 'yr':yr[0:-1]}
 
-if __name__ == '__main__':
-    from ripser import ripser
+def testBottleneckWassersteinNoisyCircle():
     N = 400
     np.random.seed(N)
     t = np.linspace(0, 2*np.pi, N+1)[0:N]
@@ -265,7 +284,7 @@ if __name__ == '__main__':
     X[:, 0] = np.cos(t)
     X[:, 1] = np.sin(t)
     I1 = ripser(X)['dgms'][1]
-    X2 = X + 0.2*np.random.randn(N, 2)
+    X2 = X + 0.1*np.random.randn(N, 2)
     I2 = ripser(X2)['dgms'][1]
     tic = time.time()
     (matchidxb, bdist, D) = getBottleneckDist(I1, I2)
@@ -283,3 +302,30 @@ if __name__ == '__main__':
     plotPDMatching(I1, I2, matchidxw)
     plt.title("Wasserstein Dist: %.3g"%wdist)
     plt.show()
+
+def writePD(I, filename):
+    fout = open(filename, "w")
+    for i in range(I.shape[0]):
+        fout.write("%g %g"%(I[i, 0], I[i, 1]))
+        if i < I.shape[0]-1:
+            fout.write("\n")
+    fout.close()
+
+def testBottleneckVsHera(NTrials = 10):
+    import subprocess
+    for trial in range(NTrials):
+        x = np.random.randn(100, 2)
+        y = np.random.randn(100, 2)
+        I1 = ripser(x)['dgms'][1]
+        I2 = ripser(y)['dgms'][1]
+        (matchidxb, bdist, D) = getBottleneckDist(I1, I2)
+        print(bdist)
+        writePD(I1, "PD1.txt")
+        writePD(I2, "PD2.txt")
+        subprocess.call(["./bottleneck_dist", "PD1.txt", "PD2.txt"])
+        print("\n")
+
+
+if __name__ == '__main__':
+    testBottleneckVsHera()
+    #testBottleneckWassersteinNoisyCircle()
