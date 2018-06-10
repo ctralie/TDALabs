@@ -17,7 +17,34 @@ from ripser import ripser, plot_dgms
 ##########                  Plotting Functions                      ##########
 ##############################################################################
 
-def plotPDMatching(I1, I2, matchidx):
+def plotBottleneckMatching(I1, I2, matchidx, D):
+    plot_dgms([I1, I2], labels = ['dgm1', 'dgm2'])
+    cp = np.cos(np.pi/4)
+    sp = np.sin(np.pi/4)
+    R = np.array([[cp, -sp], [sp, cp]])
+    if I1.size == 0:
+        I1 = np.array([[0, 0]])
+    if I2.size == 0:
+        I2 = np.array([[0, 0]])
+    I1Rot = I1.dot(R)
+    I2Rot = I2.dot(R)
+    dists = [D[i, j] for (i, j) in matchidx]
+    (i, j) = matchidx[np.argmax(dists)]
+    if i >= I1.shape[0] and j >= I2.shape[0]:
+        return
+    if i >= I1.shape[0]:
+        diagElem = np.array([I2Rot[j, 0], 0])
+        diagElem = diagElem.dot(R.T)
+        plt.plot([I2[j, 0], diagElem[0]], [I2[j, 1], diagElem[1]], 'g')
+    elif j >= I2.shape[0]:
+        diagElem = np.array([I1Rot[i, 0], 0])
+        diagElem = diagElem.dot(R.T)
+        plt.plot([I1[i, 0], diagElem[0]], [I1[i, 1], diagElem[1]], 'g')
+    else:
+        plt.plot([I1[i, 0], I2[j, 0]], [I1[i, 1], I2[j, 1]], 'g')
+
+
+def plotWassersteinMatching(I1, I2, matchidx):
     plot_dgms([I1, I2], labels = ['dgm1', 'dgm2'])
     cp = np.cos(np.pi/4)
     sp = np.sin(np.pi/4)
@@ -287,19 +314,19 @@ def testBottleneckWassersteinNoisyCircle():
     X2 = X + 0.1*np.random.randn(N, 2)
     I2 = ripser(X2)['dgms'][1]
     tic = time.time()
-    (matchidxb, bdist, D) = getBottleneckDist(I1, I2)
+    (matchidxb, bdist, bD) = getBottleneckDist(I1, I2)
     btime = time.time() - tic 
     tic = time.time()
-    (matchidxw, wdist, D) = getWassersteinDist(I1, I2)
+    (matchidxw, wdist, wD) = getWassersteinDist(I1, I2)
     wtime = time.time() - tic
     print("Elapsed Time Bottleneck: %.3g\nElapsed Time Wasserstein: %.3g"%(btime, wtime))
     
     plt.figure(figsize=(12, 6))
     plt.subplot(121)
-    plotPDMatching(I1, I2, matchidxb)
+    plotBottleneckMatching(I1, I2, matchidxb, bD)
     plt.title("Bottleneck Dist: %.3g"%bdist)
     plt.subplot(122)
-    plotPDMatching(I1, I2, matchidxw)
+    plotWassersteinMatching(I1, I2, matchidxw)
     plt.title("Wasserstein Dist: %.3g"%wdist)
     plt.show()
 
@@ -327,5 +354,5 @@ def testBottleneckVsHera(NTrials = 10):
 
 
 if __name__ == '__main__':
-    testBottleneckVsHera()
-    #testBottleneckWassersteinNoisyCircle()
+    #testBottleneckVsHera()
+    testBottleneckWassersteinNoisyCircle()
