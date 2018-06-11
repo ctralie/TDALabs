@@ -31,7 +31,8 @@ pip install [imageio library](http://imageio.github.io/)
 cd libs/hungarian
 python setup.py install
 cd ../../
-~~~~
+~~~~~
+
 ## Updating code / submodules
 
 At times, some updates may have happened to submodule dependencies.  To update these, type
