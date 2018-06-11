@@ -1,8 +1,8 @@
-# TUMTopoTimeSeries2016
+# TDALabs
 
-This series of Jupyter Notebooks serves as a walkthrough of topological time series analysis.  Applications include rhythm analysis in music and periodicity / quasiperiodicity quantification in video.
+This series of Jupyter Notebooks serves as a walkthrough of topological data analysis, topological time series analysis (including rhythm analysis in music and periodicity / quasiperiodicity quantification in video), and 3D shape analysis.  The main engine behind all of the code is a Python port of the [ripser](http://github.com/ctralie/ripser) library.
 
-This started off as a tutorial for the summer workshop "[Mathematical Methods for High-Dimensional Data Analysis](http://www-m15.ma.tum.de/Allgemeines/SummerSchool2016)."  Now it is used more generally to support pedagogical activities to support the NSF big data grant DKA-1447491, as well as assisting with the [ICERM Summer Undergraduate Program](https://icerm.brown.edu/summerug/2017/).
+This started off as a tutorial for the summer workshop "[Mathematical Methods for High-Dimensional Data Analysis](http://www-m15.ma.tum.de/Allgemeines/SummerSchool2016)."  Now it is used more generally to support pedagogical activities to support the NSF big data grant DKA-1447491, as well as assisting with the [ICERM Summer Undergraduate Program](https://icerm.brown.edu/summerug/2017/) and the workshop "<a href = "http://www.science.unitn.it/cirm/TDAPH2018.html">Topological Data Analysis and Persistent Homology</a>" in Levico Terme (Trento), Italy.
 
 
 # Installation Instructions
@@ -12,49 +12,29 @@ Below are instructions for installing and running these tutorials
 ## Checking out code
 
 ~~~~~ bash
-git clone --recursive https://github.com/rannbaron/TUMTopoTimeSeries2016.git
+git clone --recursive https://github.com/ctralie/TDALabs.git
 ~~~~~
 
 ## Installing Jupyter Notebook
 
 To run these modules, you will need to have jupyter notebook installed with a *Python 3* backend with numpy, scipy, and matplotlib.  The easiest way to install this is with Anaconda:
 
-https://www.continuum.io/downloads
+<a href = "https://www.anaconda.com/download/">https://www.anaconda.com/download/</a>
 
-Once you have downloaded and installed all of these packages, navigate to the root of this repository and type
+Once you have downloaded and installed all of these packages, navigate to the root of this repository and type the following commands, which will install dependencies
 
 ~~~~~ bash
-jupyter notebook
+pip install cython
+pip install [ripser](http://github.com/ctralie/ripser)
+pip install hopcroftkarp
+pip install [imageio library](http://imageio.github.io/)
+cd libs/hungarian
+python setup.py install
+cd ../../
 ~~~~~
-
-This will launch a browser on your computer that will allow you to run the modules via the local Jupyter backend server
-
-## Installing librosa
-After you have the proper Python environment, you will need to install the [librosa library](https://github.com/librosa/librosa) for the third module on audio processing.
 
 ## Installing avconv
-For loading video, you will need to install the [avconv](https://libav.org/download/) binaries, and you will need the Python [imageio library](http://imageio.github.io/)
-
-~~~~~ bash
-pip install imageio
-~~~~~
-
-## Compiling Ripser
-To run code which computes TDA (modules 2-4), you will need to compile some C++ code, written by [Uli Bauer](http://ulrich-bauer.org/).  From the root directory of the repository, run the following commands
-
-~~~~~ bash
-cd ripser
-make all
-cd ..
-~~~~~
-
-
-To test this, type
-~~~~~ bash
-python TDA.py
-~~~~~
-
-at the root of this repository.  This should compute a persistence diagram of a circle, which has only one persistence point.
+For loading video, you will need to install the [avconv](https://libav.org/download/) binaries
 
 ## Running the code
 
@@ -64,4 +44,4 @@ At the root of this directory, type
 jupyter notebook
 ~~~~~
 
-This will launch a browser window, where you can run the modules.  Click on one of the files (e.g. 1-SlidingWindowBasics.ipynb) to begin
+This will launch a browser window, where you can run the modules.  Click on one of the files (e.g. Basic Shapes.ipynb) to begin
