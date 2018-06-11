@@ -68,6 +68,21 @@ def loadVideo(path):
     print("\nFinished loading %s"%path)
     return (I, IDims)
 
+def loadImageIOVideo(path):
+    if not os.path.exists(path):
+        print("ERROR: Video path not found: %s"%path)
+        return None
+    import imageio
+    videoReader = imageio.get_reader(path, 'ffmpeg')
+    NFrames = videoReader.get_length()
+    F0 = videoReader.get_data(0)
+    IDims = F0.shape
+    I = np.zeros((NFrames, F0.size))
+    I[0, :] = np.array(F0.flatten(), dtype = np.float32)/255.0
+    for i in range(1, NFrames):
+        I[i, :] = np.array(videoReader.get_data(i).flatten(), dtype = np.float32)/255.0
+    return (I, IDims)
+
 #Input: path: Either a filename or a folder
 #Returns: tuple (Video NxP array, dimensions of video)
 def loadVideoManual(path, YCbCr = False):
