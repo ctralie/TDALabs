@@ -15,7 +15,7 @@ Below are instructions for installing and running these tutorials
 git clone --recursive https://github.com/ctralie/TDALabs.git
 ~~~~~
 
-## Installing Jupyter Notebook
+## Installing Jupyter Notebook And Other Dependencies
 
 To run these modules, you will need to have jupyter notebook installed with a *Python 3* backend with numpy, scipy, and matplotlib.  The easiest way to install this is with Anaconda:
 
@@ -31,6 +31,14 @@ pip install [imageio library](http://imageio.github.io/)
 cd libs/hungarian
 python setup.py install
 cd ../../
+~~~~
+## Updating code / submodules
+
+At times, some updates may have happened to submodule dependencies.  To update these, type
+
+~~~~~ bash
+git submodule update --init
+git submodule update --remote
 ~~~~~
 
 ## Installing avconv
