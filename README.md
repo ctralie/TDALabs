@@ -25,10 +25,10 @@ Once you have downloaded and installed all of these packages, navigate to the ro
 
 ~~~~~ bash
 pip install cython
-pip install <a href = "http://github.com/ctralie/ripser">ripser</a>
+pip install ripser
 pip install hopcroftkarp
-pip install <a href = "http://imageio.github.io/">imageio</a>
-cd libs/<a href = "https://github.com/hrldcpr/hungarian">hungarian</a>
+pip install imageio
+cd libs/hungarian
 python setup.py install
 cd ../../
 ~~~~~
