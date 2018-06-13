@@ -17,8 +17,8 @@ from ripser import ripser, plot_dgms
 ##########                  Plotting Functions                      ##########
 ##############################################################################
 
-def plotBottleneckMatching(I1, I2, matchidx, D):
-    plot_dgms([I1, I2], labels = ['dgm1', 'dgm2'])
+def plotBottleneckMatching(I1, I2, matchidx, D, labels = ['dgm1', 'dgm2']):
+    plot_dgms([I1, I2], labels = labels)
     cp = np.cos(np.pi/4)
     sp = np.sin(np.pi/4)
     R = np.array([[cp, -sp], [sp, cp]])
@@ -44,8 +44,8 @@ def plotBottleneckMatching(I1, I2, matchidx, D):
         plt.plot([I1[i, 0], I2[j, 0]], [I1[i, 1], I2[j, 1]], 'g')
 
 
-def plotWassersteinMatching(I1, I2, matchidx):
-    plot_dgms([I1, I2], labels = ['dgm1', 'dgm2'])
+def plotWassersteinMatching(I1, I2, matchidx, labels = ['dgm1', 'dgm2']):
+    plot_dgms([I1, I2], labels = labels)
     cp = np.cos(np.pi/4)
     sp = np.sin(np.pi/4)
     R = np.array([[cp, -sp], [sp, cp]])
