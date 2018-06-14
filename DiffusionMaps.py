@@ -5,7 +5,7 @@ from sklearn.decomposition import PCA
 import scipy.io as sio
 from scipy import sparse
 import time
-from CSMSSMTools import getSSM, getW
+from GeomUtils import getSSM, getW
 
 
 
