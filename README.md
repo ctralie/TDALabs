@@ -4,6 +4,28 @@ This series of Jupyter Notebooks serves as a walkthrough of topological data ana
 
 This started off as a tutorial for the summer workshop "[Mathematical Methods for High-Dimensional Data Analysis](http://www-m15.ma.tum.de/Allgemeines/SummerSchool2016)."  Now it is used more generally to support pedagogical activities to support the NSF big data grant DKA-1447491, as well as assisting with the [ICERM Summer Undergraduate Program](https://icerm.brown.edu/summerug/2017/) and the workshop "<a href = "http://www.science.unitn.it/cirm/TDAPH2018.html">Topological Data Analysis and Persistent Homology</a>" in Levico Terme (Trento), Italy.
 
+## Suggested Order
+For 4 sessions with 90 minutes each (as in Levico), the following order is suggested (with some wiggle room between sessions)
+
+### Session 1
+* Basic Shapes
+* Wasserstein And Bottleneck
+
+### Session 2
+* SlidingWindow1-Basics
+* SlidingWindow2-PersistentHomology
+* SlidingWindow3-AudioApplications
+* SlidingWindow4-Video
+
+### Session 3
+* Approximate Sparse Filtrations
+* Image Patches
+* Diffusion Maps And TDA
+
+### Session 4
+* 3D Shapes
+* Whatever is leftover
+
 
 # Installation Instructions
 
