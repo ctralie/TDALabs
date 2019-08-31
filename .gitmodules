@@ -1,12 +1,6 @@
-[submodule "libs/hungarian"]
-	path = libs/hungarian
-	url = https://github.com/hrldcpr/hungarian.git
 [submodule "DREiMac"]
 	path = DREiMac
 	url = https://github.com/ctralie/DREiMac.git
 [submodule "pyhks"]
 	path = pyhks
 	url = https://github.com/ctralie/pyhks.git
-[submodule "libs/ripser"]
-	path = libs/ripser
-	url = https://github.com/ctralie/ripser.git
