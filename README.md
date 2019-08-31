@@ -61,7 +61,7 @@ git submodule update --remote
 ~~~~~
 
 ## Installing avconv
-For loading video, you will need to install the [avconv](https://libav.org/download/) binaries
+For loading video in SlidingWindow4-Video, you will need to install the [ffmpeg](https://ffmpeg.org/download.html) binaries
 
 ## Running the code
 
