@@ -48,16 +48,12 @@ Once you have downloaded and installed all of these packages, navigate to the ro
 ~~~~~ bash
 pip install cython
 pip install ripser
-pip install hopcroftkarp
 pip install imageio
-cd libs/hungarian
-python setup.py install
-cd ../../
 ~~~~~
 
 ## Updating code / submodules
 
-At times, some updates may have happened to submodule dependencies.  To update these, type
+At times, some updates may have happened to submodule dependencies (pykhs for the heat kernel signature and dreimac for projective coordinates).  To update these, type
 
 ~~~~~ bash
 git submodule update --init
