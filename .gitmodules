@@ -4,6 +4,3 @@
 [submodule "pyhks"]
 	path = pyhks
 	url = https://github.com/ctralie/pyhks.git
-[submodule "libs/ripser"]
-	path = libs/ripser
-	url = https://github.com/ctralie/ripser.git
