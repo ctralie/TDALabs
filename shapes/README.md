@@ -1,0 +1,1 @@
+Shapes obtained from <a href = "http://www.enseignement.polytechnique.fr/informatique/INF556/TD7-8/data/off/shapes.zip">http://www.enseignement.polytechnique.fr/informatique/INF556/TD7-8/data/off/shapes.zip</a>.  They can be used to cluster by pose, irrespective of body type

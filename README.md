@@ -47,7 +47,7 @@ Once you have downloaded and installed all of these packages, navigate to the ro
 
 ~~~~~ bash
 pip install cython
-pip install <a href = "https://github.com/scikit-tda/ripser.py">ripser</a>
+pip install ripser
 pip install imageio   (for SlidingWindow4-Video only)
 ~~~~~
 
