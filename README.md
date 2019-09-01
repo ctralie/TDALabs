@@ -47,8 +47,8 @@ Once you have downloaded and installed all of these packages, navigate to the ro
 
 ~~~~~ bash
 pip install cython
-pip install ripser
-pip install imageio
+pip install <a href = "https://github.com/scikit-tda/ripser.py">ripser</a>
+pip install imageio   (for SlidingWindow4-Video only)
 ~~~~~
 
 ## Updating code / submodules
@@ -60,7 +60,7 @@ git submodule update --init
 git submodule update --remote
 ~~~~~
 
-## Installing avconv
+## Installing ffmpeg
 For loading video in SlidingWindow4-Video, you will need to install the [ffmpeg](https://ffmpeg.org/download.html) binaries
 
 ## Running the code
