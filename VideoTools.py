@@ -17,7 +17,7 @@ import imageio
 
 #Need these for saving 3D video
 
-AVCONV_BIN = 'avconv'
+AVCONV_BIN = 'ffmpeg'
 TEMP_STR = "pymeshtempprefix"
 
 #############################################################
@@ -55,7 +55,7 @@ def loadVideo(path):
         print("ERROR: Video path not found: %s"%path)
         return None
     videoReader = imageio.get_reader(path, 'ffmpeg')
-    NFrames = videoReader.get_length()
+    NFrames = videoReader.count_frames()
     F0 = videoReader.get_data(0)
     IDims = F0.shape
     I = np.zeros((NFrames, F0.size))
@@ -74,7 +74,7 @@ def loadImageIOVideo(path):
         return None
     import imageio
     videoReader = imageio.get_reader(path, 'ffmpeg')
-    NFrames = videoReader.get_length()
+    NFrames = videoReader.count_frames()
     F0 = videoReader.get_data(0)
     IDims = F0.shape
     I = np.zeros((NFrames, F0.size))
