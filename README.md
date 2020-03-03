@@ -39,13 +39,16 @@ git clone --recursive https://github.com/ctralie/TDALabs.git
 
 ## Installing Jupyter Notebook And Other Dependencies
 
-To run these modules, you will need to have jupyter notebook installed with a *Python 3* backend with numpy, scipy, and matplotlib.  The easiest way to install this is with Anaconda:
+To run these modules, you will need to have Jupyter notebook installed with a
+*Python 3* backend with numpy, scipy, and matplotlib, and ipywidgets.  The
+easiest way to install this is with Anaconda:
 
 <a href = "https://www.anaconda.com/download/">https://www.anaconda.com/download/</a>
 
 Once you have downloaded and installed all of these packages, navigate to the root of this repository and type the following commands, which will install dependencies
 
 ~~~~~ bash
+pip install cechmate
 pip install cython
 pip install ripser
 pip install imageio   (for SlidingWindow4-Video only)
